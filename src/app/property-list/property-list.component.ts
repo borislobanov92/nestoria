@@ -10,8 +10,8 @@ import { SinglePageService } from '../shared/single_page-service';
 
 import { Property } from '../shared/property';
 
+
 @Component({
-  moduleId: module.id,
   selector: 'property-list',
   templateUrl: 'property-list.component.html',
   styleUrls: ['property-list.component.css']
@@ -30,14 +30,9 @@ export class PropertyListComponent implements OnInit {
 
   pager: any = {};
   pagedItems: any[];
+  currentPage: number = 1;
 
   itemsPerPage: number = 24;
-
-  queryParams: Object = {
-    'place': '',
-    'numres': 24,
-    'page': 1
-  }
 
   constructor(
     private listingService: ListingService,
@@ -56,8 +51,6 @@ export class PropertyListComponent implements OnInit {
 
   toggleFavorites(house){
     let id = '' + this.getHouseId(house);
-    //console.log(id);
-    //console.log('favorites toggled');
 
     var pos = this.favoritesKeys.indexOf(id);
     if (pos > -1) {
@@ -68,18 +61,15 @@ export class PropertyListComponent implements OnInit {
       this.favoritesKeys.push(id);
       this.favorites[id] = house;
     }
-    //console.log('Keys: ', this.favoritesKeys);
-    //console.log('Houses: ', this.favorites);
   }
 
   getHouseId(house: any){
     return this.listingService.getId(house.lister_url);
   }
-
-  setQueryParams (formContent) {
-    this.queryParams['place'] = formContent.place;
-    //console.log(this.queryParams);
-  }
+  //
+  // setQueryParams (formContent) {
+  //   this.queryParams['place'] = formContent.place;
+  // }
 
   // formQueryParams(queryParamObj){
   //   let params: URLSearchParams = new URLSearchParams();
@@ -96,6 +86,7 @@ export class PropertyListComponent implements OnInit {
 
     this.pager = this.pagerService.getPager(this.data.response.total_results, page, this.itemsPerPage);
     this.pagedItems = this.listings.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.currentPage = this.pager.currentPage;
   }
 
   sendRequest (place: string, itemsPerPage = 24, page = 1) {
@@ -107,12 +98,11 @@ export class PropertyListComponent implements OnInit {
         this.listings = this.data.response.listings;
         this.pages = this.data.response.total_pages;
 
-        let currentPage = this.pager.currentPage ? this.pager.currentPage : 1;
-        this.setPage(currentPage);
+        this.setPage(this.currentPage);
       },
       err => console.error(err),
       () => {
-        console.log('success');
+        //console.log('success');
         this.loading = false;
       }
     );
@@ -120,12 +110,15 @@ export class PropertyListComponent implements OnInit {
 
   }
 
-
-  // logParams() {
-  //   console.log(arguments);
-  // }
-
   ngOnInit() {
+    this.route.params
+      .map(params => params)
+      .subscribe((params) => {
+        if(params['place']) {
+          this.currentPage = +params['page'];
+          this.sendRequest(params['place'], 24, +params['page']);
+        }
+      })
   }
 
 }

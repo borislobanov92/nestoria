@@ -10,12 +10,10 @@ export class SearchFormComponent implements OnInit {
   constructor() { }
 
   myGeolocation: any;
-  //formContent;
 
   @Output() submitForm = new EventEmitter();
 
   onSubmit (formContent) {
-    //console.log('clicked', formContent);
     this.submitForm.emit(formContent);
   }
 
@@ -28,7 +26,6 @@ export class SearchFormComponent implements OnInit {
 
   setPosition(position){
     this.myGeolocation = position.coords;
-    //console.log(this.location);
   }
 
   ngOnInit() {

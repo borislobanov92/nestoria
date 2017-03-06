@@ -34,16 +34,11 @@ export class PropertyItemComponent implements OnInit {
     }
     else {
       let stringified = JSON.stringify(this.house);
-      //console.log(stringified);
       localStorage.setItem(this.houseId, stringified);
     }
     this.house.isInFavorites = !this.house.isInFavorites;
     this.toggleFavs.emit(this.house);
     return false;
-  }
-
-  getId() {
-    console.log(this.houseId);
   }
 
   mouseOver($event) {
@@ -73,11 +68,9 @@ export class PropertyItemComponent implements OnInit {
     if (localStorage.getItem(this.houseId)) {
       this.house.isInFavorites = true;
     }
-    //console.log(`House with id ${this.houseId} created`);
     let imgContainer = this.el.querySelector('.img_container');
     this.imgWidth = imgContainer.clientWidth;
     this.imgHeight = this.imgWidth * 0.75;
-    //console.log(imgContainer);
   }
 
 }
