@@ -1,0 +1,11 @@
+.coords-info .col-md-4 {
+  padding-left: 0;
+}
+
+.coords-info button {
+  margin-top: 10px;
+}
+
+.pagination > li:not(.disabled) > a {
+  cursor: pointer;
+}

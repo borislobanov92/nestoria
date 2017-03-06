@@ -1,0 +1,68 @@
+<div class="container" *ngIf="house">
+  <div class="row">
+    <div class="house col-md-12">
+      <h2 class="house-title">{{ house.title }}</h2>
+
+      <div class="col-md-6">
+        <div class="house_image">
+          <div class="img_container">
+            <img src="{{ house.img_url }}" alt="">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="wrapper">
+
+          <div class="row">
+
+            <div class="price-block">
+              <div class="price">
+                <span class="price-amount">{{ house.price_formatted }}</span>
+                <span class="price-type">({{ house.price_type }} price)</span>
+              </div>
+              <div class="comission">{{ house.comission }}</div>
+            </div>
+
+
+            <div class="bed-bath">
+              <ul>
+                <li>
+                  <div class="bb_number">{{ house.bedroom_number }}</div>
+                  <div class="bb_type">Beds</div>
+                </li>
+                <li>
+                  <div class="bb_number">{{ house.bathroom_number }}</div>
+                  <div class="bb_type">Baths</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="geolocation">
+            <strong>Location:</strong> <br>
+            Latitude: {{ house.latitude}}<br>
+            Longitude: {{ house.longitude}}<br>
+          </div>
+
+          <div class="misc-info">
+            <p class="keywords">Keywords:
+              <span *ngFor="let keyword of house.keywords.split(' ')">
+                {{ keyword }}</span>
+            </p>
+            <p class="lister_info" *ngIf="house.lister_name">
+              Lister: {{ house.lister_name }}
+              <a href="{{ house.lister_url }}" target="_blank">(to lister's page)</a>
+            </p>
+
+            <p class="summary">{{ house.summary }}</p>
+            <p class="updated">{{ house.updated_in_days_formatted }}</p>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>

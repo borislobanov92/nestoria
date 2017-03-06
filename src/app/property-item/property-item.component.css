@@ -1,0 +1,73 @@
+.house {
+  /*max-width: 300px;*/
+  margin-top: 20px;
+  border: 1px solid #ddd;
+}
+
+.img_container {
+  width: 100%;
+}
+
+.house img {
+  width: 100%;
+}
+
+.info-block_header {
+  padding: 10px;
+}
+
+.info-block_header > .col-md-10{
+  padding-right: 10px;
+}
+
+.info-block_header > .col-md-2{
+  padding-left: 10px;
+}
+
+a.favorites.glyphicon {
+  font-size: 30px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.gold {
+  color: #FFD700;
+}
+
+a.house-title {
+  font-size: 22px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wrapper {
+  padding: 10px 20px;
+}
+
+.bed-bath ul {
+  list-style: none;
+  padding-left: 10px;
+}
+
+.bed-bath li {
+  float: left;
+  padding: 0px 15px 10px 0px;
+  color: #939393;
+}
+
+.bb_number {
+  font-size: 28px;
+  text-align: center;
+}
+
+.bb_type {
+  text-align: center;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.price {
+  font-size: 28px;
+}

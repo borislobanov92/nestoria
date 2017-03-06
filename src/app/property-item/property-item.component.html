@@ -1,0 +1,47 @@
+<div class="house">
+  <div class="house_image">
+    <div class="img_container" [style.height.px]="imgHeight">
+      <img src="{{house.img_url}}" alt="">
+    </div>
+  </div>
+  <div class="info-block">
+    <div class="info-block_header row">
+      <div class="col-md-10">
+        <a [routerLink]="['/single']"
+           (click)="sendHouseInfo(house)"
+           class="house-title">{{house.title}}</a>
+      </div>
+      <div class="col-md-2">
+        <a href="#"
+
+           (click)="toggleFavorites(); "
+           [ngClass]="{
+            'gold' : house.isInFavorites,
+            'glyphicon-star': house.isInFavorites,
+            'glyphicon-star-empty': !house.isInFavorites}"
+           class="favorites glyphicon"
+           tooltipPlacement="right" tooltip="Add to favorites"></a>
+        <!--(mouseover)="mouseOver($event)"-->
+        <!--(mouseleave)="mouseLeave($event)"-->
+      </div>
+    </div>
+    <div class="wrapper">
+      <div class="row">
+        <div class="bed-bath col-md-6">
+          <ul>
+            <li>
+              <div class="bb_number">{{house.bedroom_number}}</div>
+              <div class="bb_type">Beds</div>
+            </li>
+            <li>
+              <div class="bb_number">{{house.bathroom_number}}</div>
+              <div class="bb_type">Baths</div>
+            </li>
+          </ul>
+        </div>
+        <div class="price col-md-6 text-right">{{house.price_formatted}}</div>
+      </div>
+      <div class="lister_info text-right">Lister: {{house.lister_name}}</div>
+    </div>
+  </div>
+</div>

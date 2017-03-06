@@ -1,0 +1,21 @@
+<div class="header">
+  <div class="page-header row">
+    <div class="btn-container">
+      <a *ngIf="getLocation().indexOf('search') == 1" [routerLink]="['/favorites']"
+         class="btn btn-lg btn-warning">Favorites</a>
+      <a *ngIf="getLocation().indexOf('favorites') == 1" [routerLink]="['/search']"
+         class="btn btn-lg btn-primary">Search</a>
+      <a *ngIf="getLocation().indexOf('single') == 1" [routerLink]="['/search']"
+         class="btn btn-lg btn-primary">Search</a>
+      <a *ngIf="getLocation().indexOf('single') == 1" [routerLink]="['/favorites']"
+         class="btn btn-lg btn-warning">Favorites</a>
+    </div>
+
+    <h1 class="page-title">{{ title }}</h1>
+  </div>
+  <p class="instructional-text">
+    Use the form below to search for houses to buy.
+    You can search by place-name, postcode,
+    or click 'My location', to search in your current location!
+  </p>
+</div>

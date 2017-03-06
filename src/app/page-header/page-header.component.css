@@ -1,0 +1,18 @@
+.page-header {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.page-header .btn-container {
+  position: absolute;
+  right: 0;
+}
+
+.page-title {
+  text-align: center;
+}
+
+.instructional-text {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
