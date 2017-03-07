@@ -9,26 +9,41 @@ export class SearchFormComponent implements OnInit {
 
   constructor() { }
 
-  myGeolocation: any;
+  //myGeolocation: any;
+
+  myMockGeolocation: any;
 
   @Output() submitForm = new EventEmitter();
+  @Output() submitLocation = new EventEmitter();
 
   onSubmit (formContent) {
     this.submitForm.emit(formContent);
   }
 
+  onSubmitLocation (coords) {
+    this.submitLocation.emit(coords);
+  }
 
+
+  // Not available on insecure origins anymore
   getMyLocation() {
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
+    this.myMockGeolocation = {
+      'latitude' : 51.48352,
+      'longitude': -0.124846
     }
+    // if(navigator.geolocation){
+    //   navigator.geolocation.getCurrentPosition(this.setPosition.bind(this));
+    // }
   }
 
-  setPosition(position){
-    this.myGeolocation = position.coords;
-  }
+  // setPosition(position){
+  //   console.log('setposition called');
+  //   this.myGeolocation = position.coords;
+  //   console.log('myGeolocation set to ', this.myGeolocation);
+  // }
 
   ngOnInit() {
+    this.getMyLocation();
   }
 
 }

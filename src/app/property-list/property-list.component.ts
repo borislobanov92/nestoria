@@ -24,6 +24,10 @@ export class PropertyListComponent implements OnInit {
   listings: Property[];
   loading: boolean;
   curPath: string;
+  coords = {
+    'latitude': 0,
+    'longitude': 0
+  };
 
   favorites: any;
   favoritesKeys: any;
@@ -66,18 +70,6 @@ export class PropertyListComponent implements OnInit {
   getHouseId(house: any){
     return this.listingService.getId(house.lister_url);
   }
-  //
-  // setQueryParams (formContent) {
-  //   this.queryParams['place'] = formContent.place;
-  // }
-
-  // formQueryParams(queryParamObj){
-  //   let params: URLSearchParams = new URLSearchParams();
-  //   for (let key in queryParamObj) {
-  //     params.set(key, queryParamObj[key]);
-  //   }
-  //   return params;
-  // }
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) {
@@ -89,10 +81,28 @@ export class PropertyListComponent implements OnInit {
     this.currentPage = this.pager.currentPage;
   }
 
-  sendRequest (place: string, itemsPerPage = 24, page = 1) {
+  sendRequest (place?: string, itemsPerPage = 24, page = 1 , coords?) {
     this.loading = true;
-    this.place = place;
-    this.listingService.getListing(place, itemsPerPage, page).subscribe(
+
+    //console.log(this.place, this.coords, place, coords, this.currentPage);
+
+    if (place) {
+      //console.log(this.place);
+      if ((this.place && this.place != place) || !this.place) this.currentPage = 1;
+      this.place = place;
+    }
+
+    if (coords) {
+      if (this.coords &&
+          (this.coords.latitude != coords.latitude ||
+           this.coords.longitude != coords.longitude) ||
+          !this.coords) this.currentPage = 1;
+      this.coords = coords;
+    }
+
+
+    this.coords = coords;
+    this.listingService.getListing(place, itemsPerPage, page, coords).subscribe(
       data => {
         this.data = data;
         this.listings = this.data.response.listings;
@@ -102,11 +112,13 @@ export class PropertyListComponent implements OnInit {
       },
       err => console.error(err),
       () => {
-        //console.log('success');
+        console.log('success');
         this.loading = false;
       }
     );
-    this.location.go('/search/' + place + '/' + page);
+    if(place) this.location.go('/search/place/' + place + '/' + page);
+    else if(coords) this.location.go('/search/coords/' + coords['latitude'] + ',' +
+                                      coords['longitude'] + '/' + page);
 
   }
 
@@ -114,9 +126,19 @@ export class PropertyListComponent implements OnInit {
     this.route.params
       .map(params => params)
       .subscribe((params) => {
-        if(params['place']) {
+      console.log(params);
+        if (params['place']) {
+
           this.currentPage = +params['page'];
-          this.sendRequest(params['place'], 24, +params['page']);
+          this.sendRequest(params['place'], this.itemsPerPage, +params['page']);
+        }
+        else if (params['coords']) {
+
+          this.currentPage = +params['page'];
+          this.coords.latitude = params['coords'].split(',')[0];
+          this.coords.longitude = params['coords'].split(',')[1];
+
+          this.sendRequest(null, this.itemsPerPage, +params['page'], this.coords);
         }
       })
   }

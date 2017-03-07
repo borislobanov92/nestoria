@@ -1,5 +1,6 @@
 <div *ngIf="curPath.indexOf('search') == 0">
-  <search-form (submitForm)="sendRequest($event['place'])"></search-form>
+  <search-form (submitForm)="sendRequest($event['place'])"
+               (submitLocation)="sendRequest(null, itemsPerPage, 1, $event)"></search-form>
   <div *ngIf="loading">loading...</div>
 
   <div *ngIf="listings && listings.length > 0">
@@ -13,23 +14,23 @@
 
         <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
           <li [ngClass]="{disabled:pager.currentPage === 1}">
-            <a (click)="setPage(1);sendRequest(place, itemsPerPage, 1)">First</a>
+            <a (click)="setPage(1);sendRequest(place, itemsPerPage, 1, coords)">First</a>
           </li>
           <li [ngClass]="{disabled:pager.currentPage === 1}">
             <a (click)="setPage(pager.currentPage - 1);
-                        sendRequest(place, itemsPerPage, pager.currentPage - 1)">Previous</a>
+                        sendRequest(place, itemsPerPage, pager.currentPage, coords)">Previous</a>
           </li>
           <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
             <a (click)="setPage(page);
-                        sendRequest(place, itemsPerPage, page)">{{page}}</a>
+                        sendRequest(place, itemsPerPage, page, coords)">{{page}}</a>
           </li>
           <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
             <a (click)="setPage(pager.currentPage + 1);
-                        sendRequest(place, itemsPerPage, pager.currentPage + 1)">Next</a>
+                        sendRequest(place, itemsPerPage, pager.currentPage, coords)">Next</a>
           </li>
           <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
             <a (click)="setPage(pager.totalPages);
-                        sendRequest(place, itemsPerPage, pager.totalPages)">Last</a>
+                        sendRequest(place, itemsPerPage, pager.totalPages, coords)">Last</a>
           </li>
         </ul>
       </div>

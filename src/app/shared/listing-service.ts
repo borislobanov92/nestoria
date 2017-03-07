@@ -10,8 +10,8 @@ export class ListingService {
 
   constructor(private http: Http) { }
 
-  getListing (place: string, numres = 24, page = 1) {
-    console.log(place);
+  getListing (place?: string, numres = 24, page = 1, coords?) {
+    //console.log(place);
     let params = new URLSearchParams();
     params.set('country', 'uk');
     params.set('pretty', '1');
@@ -20,7 +20,9 @@ export class ListingService {
     params.set('listing_type', 'buy');
     params.set('number_of_results', numres.toString());
     params.set('page', page.toString());
-    params.set('place_name', place);
+
+    if (place) params.set('place_name', place);
+    else if (coords) params.set('centre_point', coords['latitude'] + ',' + coords['longitude']);
 
     let jsonUrl = this.apiUrl + '?' + params.toString();
     console.log(jsonUrl);
@@ -28,8 +30,8 @@ export class ListingService {
 
     return this.http.get(proxy + jsonUrl)
       .map((res:Response) => res.json());
-
   }
+
 
   getPathname(url: string) {
     let l = document.createElement("a");
