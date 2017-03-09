@@ -2,13 +2,17 @@ import { Component, OnInit, Injectable, Input } from '@angular/core';
 import { Http, Response, URLSearchParams } from '@angular/http';
 import { ActivatedRoute, Params, Router, NavigationStart }   from '@angular/router';
 import { Location }                 from '@angular/common';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import 'rxjs/add/operator/map';
 
-import { ListingService } from '../shared/listing-service';
-import { PagerService } from '../shared/pager-service';
-import { SinglePageService } from '../shared/single_page-service';
+import { ListingService } from '../services/listing-service';
+import { PagerService } from '../services/pager-service';
+import { SinglePageService } from '../services/single_page-service';
+import { FirebaseService } from '../services/firebase-service';
 
-import { Property } from '../shared/property';
+
+import { Property } from '../services/property';
+import {forEach} from "@angular/router/src/utils/collection";
 
 
 @Component({
@@ -29,6 +33,8 @@ export class PropertyListComponent implements OnInit {
     'longitude': 0
   };
 
+  fbFavorites: any;
+  //fbFavoritesKeys: any;
   favorites: any;
   favoritesKeys: any;
 
@@ -41,35 +47,79 @@ export class PropertyListComponent implements OnInit {
   constructor(
     private listingService: ListingService,
     private pagerService: PagerService,
-    private singlePageService: SinglePageService,
+    private firebaseService: FirebaseService,
     private route: ActivatedRoute,
     private location: Location,
-
   ) {
-
     let favAndKeys = this.listingService.getFavorites();
     this.favoritesKeys = favAndKeys[0];
     this.favorites = favAndKeys[1];
+
+    this.firebaseService.getFavorites()
+      .subscribe(fbFavorites => {
+        this.fbFavorites = fbFavorites;
+      });
+
     this.curPath = this.location.path().split('/')[1];
   }
 
-  toggleFavorites(house){
-    let id = '' + this.getHouseId(house);
 
-    var pos = this.favoritesKeys.indexOf(id);
-    if (pos > -1) {
-      this.favoritesKeys.splice(pos, 1);
-      delete this.favorites[id];
+  toggleFavorites(house){
+
+    let ids = this.fbFavorites.map(house => house.id);
+    let houseId = this.getHouseId(house);
+
+    let index = ids.indexOf(houseId);
+
+    if (index == -1) {
+      let newHouse = {
+        'id': houseId,
+        'data': house,
+        'isFavorite': true
+      }
+      this.firebaseService.addToFavorites(newHouse);
     }
+
     else {
-      this.favoritesKeys.push(id);
-      this.favorites[id] = house;
+      let key = this.fbFavorites[index]['$key'];
+      this.firebaseService.removeFromFavorites(key);
     }
+
+    /*this.fbFavorites = this.firebaseService.getFavorites().subscribe(
+      fbFavorites => {
+        this.fbFavorites = fbFavorites;
+        let ids = this.fbFavorites.map(house => house.id);
+        console.log(ids);
+      });*/
+
+
+
+    // let id = '' + this.getHouseId(house);
+    //
+    // var pos = this.favoritesKeys.indexOf(id);
+    // if (pos > -1) {
+    //   this.favoritesKeys.splice(pos, 1);
+    //   delete this.favorites[id];
+    // }
+    // else {
+    //   this.favoritesKeys.push(id);
+    //   this.favorites[id] = house;
+    // }
   }
+
 
   getHouseId(house: any){
     return this.listingService.getId(house.lister_url);
   }
+
+  // returns true if house in favorites
+  isInFavorites(house) {
+    let ids = this.fbFavorites.map(house => house.id);
+    let houseId = this.getHouseId(house);
+    let index = ids.indexOf(houseId);
+    return index > -1;
+  }
+
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) {
@@ -81,13 +131,11 @@ export class PropertyListComponent implements OnInit {
     this.currentPage = this.pager.currentPage;
   }
 
+
   sendRequest (place?: string, itemsPerPage = 24, page = 1 , coords?) {
     this.loading = true;
 
-    //console.log(this.place, this.coords, place, coords, this.currentPage);
-
     if (place) {
-      //console.log(this.place);
       if ((this.place && this.place != place) || !this.place) this.currentPage = 1;
       this.place = place;
     }
@@ -99,7 +147,6 @@ export class PropertyListComponent implements OnInit {
           !this.coords) this.currentPage = 1;
       this.coords = coords;
     }
-
 
     this.coords = coords;
     this.listingService.getListing(place, itemsPerPage, page, coords).subscribe(
@@ -119,14 +166,14 @@ export class PropertyListComponent implements OnInit {
     if(place) this.location.go('/search/place/' + place + '/' + page);
     else if(coords) this.location.go('/search/coords/' + coords['latitude'] + ',' +
                                       coords['longitude'] + '/' + page);
-
   }
 
+
   ngOnInit() {
+
     this.route.params
       .map(params => params)
       .subscribe((params) => {
-      console.log(params);
         if (params['place']) {
 
           this.currentPage = +params['page'];

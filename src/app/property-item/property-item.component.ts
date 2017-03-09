@@ -1,12 +1,12 @@
 import { Component, OnInit, EventEmitter, Output, Input, ElementRef } from '@angular/core';
-import { SinglePageService } from '../shared/single_page-service';
+import { SinglePageService } from '../services/single_page-service';
 
-import { Property } from '../shared/property';
+import { Property } from '../services/property';
 
 
 @Component({
   selector: 'property-item',
-  inputs: ['house', 'houseId'],
+  inputs: ['house', 'houseId', 'isFavorite'],
   templateUrl: './property-item.component.html',
   styleUrls: ['./property-item.component.css']
 })
@@ -15,8 +15,9 @@ export class PropertyItemComponent implements OnInit {
   private el: HTMLElement;
   imgWidth;
   imgHeight;
-  @Input() house : Property;
+  @Input() house: any;
   houseId;
+  isFavorite;
 
   @Output() toggleFavs = new EventEmitter();
 
@@ -28,18 +29,12 @@ export class PropertyItemComponent implements OnInit {
     this.el = el.nativeElement;
   }
 
+
   toggleFavorites() {
-    if(localStorage.getItem(this.houseId)) {
-      localStorage.removeItem(this.houseId);
-    }
-    else {
-      let stringified = JSON.stringify(this.house);
-      localStorage.setItem(this.houseId, stringified);
-    }
-    this.house.isInFavorites = !this.house.isInFavorites;
     this.toggleFavs.emit(this.house);
     return false;
   }
+
 
   mouseOver($event) {
     //console.log('Mouse over the star', $event.target);
@@ -49,6 +44,7 @@ export class PropertyItemComponent implements OnInit {
       $event.target.classList.toggle("gold");
     }
   }
+
 
   mouseLeave($event) {
     //console.log('Mouse left the star', $event.target);
@@ -64,7 +60,9 @@ export class PropertyItemComponent implements OnInit {
     this.singlePageService.setHouseInfo(info);
   }
 
+
   ngOnInit() {
+    //console.log(this.house);
     if (localStorage.getItem(this.houseId)) {
       this.house.isInFavorites = true;
     }

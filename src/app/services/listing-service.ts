@@ -10,6 +10,7 @@ export class ListingService {
 
   constructor(private http: Http) { }
 
+
   getListing (place?: string, numres = 24, page = 1, coords?) {
     //console.log(place);
     let params = new URLSearchParams();
@@ -37,16 +38,16 @@ export class ListingService {
     let l = document.createElement("a");
     l.href = url;
     let pathname = l.pathname;
-    //console.log(pathname);
     return pathname;
   }
+
 
   getId(url: string) {
     let pathname = this.getPathname(url);
     let id = parseInt(pathname.split('/')[2]);
-    //console.log(id);
     return id;
   }
+
 
   getFavorites() {
     var favorites = {}, keys = [];
@@ -60,6 +61,7 @@ export class ListingService {
     }
     return [keys, favorites];
   }
+
 
   private handleError(error : any) {
     console.error('Произошла ошибка', error);

@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, Input, ElementRef } from '@angular/core';
 
-import { SinglePageService } from '../shared/single_page-service';
-import { Property } from '../shared/property';
+import { SinglePageService } from '../services/single_page-service';
+import { Property } from '../services/property';
 
 
 @Component({

@@ -12,13 +12,11 @@
            class="house-title">{{house.title}}</a>
       </div>
       <div class="col-md-2">
-        <a href="#"
-
-           (click)="toggleFavorites(); "
-           [ngClass]="{
-            'gold' : house.isInFavorites,
-            'glyphicon-star': house.isInFavorites,
-            'glyphicon-star-empty': !house.isInFavorites}"
+        <a (click)="toggleFavorites()"
+          [ngClass]="{
+            'gold' : isFavorite,
+            'glyphicon-star': isFavorite,
+            'glyphicon-star-empty': !isFavorite}"
            class="favorites glyphicon"
            tooltipPlacement="right" tooltip="Add to favorites"></a>
         <!--(mouseover)="mouseOver($event)"-->

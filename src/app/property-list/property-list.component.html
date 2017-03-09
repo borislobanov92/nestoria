@@ -38,6 +38,7 @@
         <property-item class="listing-item col-md-4" *ngFor="let house of listings"
           [house]="house"
           [houseId]="getHouseId(house)"
+          [isFavorite]="isInFavorites(house)"
           (toggleFavs)="toggleFavorites($event)">
         </property-item>
       </div>
@@ -51,23 +52,24 @@
 </div>
 
 <div *ngIf="curPath == 'favorites'">
-  <div *ngIf="favorites && favoritesKeys.length > 0">
+  <div *ngIf="fbFavorites && fbFavorites.length > 0">
     <p class="num-of-items-found">
-      You haved marked {{ favoritesKeys.length }} houses as your favorites.
+      You haved marked {{ fbFavorites.length }} houses as your favorites.
     </p>
     <div class="container">
       <div class="row">
-        <property-item class="listing-item col-md-4" *ngFor="let id of favoritesKeys"
-                       [house]="favorites[id]"
-                       [houseId]="id"
+        <property-item class="listing-item col-md-4" *ngFor="let house of fbFavorites"
+                       [house]="house['data']"
+                       [houseId]="house['id']"
+                       [isFavorite]="true"
                        (toggleFavs)="toggleFavorites($event)">
         </property-item>
       </div>
     </div>
   </div>
-  <div *ngIf="favorites && favoritesKeys.length == 0">
+  <div *ngIf="fbFavorites && fbFavorites.length == 0">
     <p class="num-of-items-found nothing-found">
-      You haven't added anything to your 'Favorites' list yet <a href="/search">Search for properties</a>?
+      You haven't added anything to your 'Favorites' list yet <a [routerLink]="['/search']">Search for properties</a>?
     </p>
   </div>
 </div>
